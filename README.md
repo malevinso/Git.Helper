@@ -176,5 +176,5 @@ E.g., Can't Merge Automatically
 
   Now the first-change PR will probably give us a "Can't automatically merge" error.  
 
-  -- Working on the use case now -- SECOND CHANGE
+  -- Working on the use case now -- SECOND CHANGE and FIRST CHANGE 
 
