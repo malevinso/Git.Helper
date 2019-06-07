@@ -110,14 +110,71 @@ I will use malevinso as the "Master" org where the final code  repo will be main
 
 ### Create a Pull Request to Request Update to Main Repo
 
+Very simple, just go to the upstream rep that you want to merge into and click New Pull Request
+
+1. make sure you have the correct branch    malevinso/GitHelper (Master) <- marks-demo-org/GitHelper(working-branch)
+2. Merge the PR
+
+now we have on the master branch: 
+````
+commit a46dc0b23bb2f3ecd4036e432ea01004a12991d8 (HEAD -> master, upstream/master, origin/master, origin/HEAD)
+Merge: 5d147c4 7063407
+Author: malevinso <malevinso@gmail.com>
+Date:   Fri Jun 7 11:05:10 2019 -0600
+
+    Merge pull request #1 from marks-demo-org/working-branch
+
+    Commit README
+
+commit 70634070c6af2ffb08c6c48f12d3825e4a273f68
+Author: Mark Levinson <malevinso@gmail.com>
+Date:   Wed Jun 5 15:28:58 2019 -0600
+
+    Commit README
+
+commit 5d147c471dc7ba128576caa8bdd6ea5e718a4c17
+Author: malevinso <malevinso@gmail.com>
+Date:   Wed Jun 5 14:37:33 2019 -0600
+
+    Initial commit
+````
+
+
+### Delete the working-branch
+
+git branch -d working-branch
+git push origin --delete working-branch
+
 
 ### Update the Local Repo
+
+from the master branch 
+git pull upstream
 
 
 ### Update the Fork
 
+from the master branch
 
+git push upstream  
 
+## What if the PR fails? 
+E.g., Can't Merge Automatically
 
+>This is where it gets tricky.
+    This can  happen when the master branch on the base Repo got updated out from under you. Now we have to "rebase" our changes on top of those new changes and update our PR. 
 
+### Create new use case for this:
+
+  For this use case I created 2 branches:
+  1. first-change
+  2. second-change
+
+  I will make a change to the README on the first-change and create a PR.
+
+  However, prior to merging the pull request, I will another change, similar to the first on the second-change branch. Create a PR, and merge it.
+
+  Now the first-change PR will probably give us a "Can't automatically merge" error.  
+
+  -- Working on the use case now -- FIRST CHANGE
 
