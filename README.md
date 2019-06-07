@@ -176,5 +176,134 @@ E.g., Can't Merge Automatically
 
   Now the first-change PR will probably give us a "Can't automatically merge" error.  
 
-  -- Working on the use case now -- SECOND CHANGE and FIRST CHANGE 
+  first thing to do is update master branch:
+
+
+  ````
+  git checkout master
+  git pull upstream master
+  ````
+
+  Now I can rebase first-change from master
+  ````
+  git checkout first-change
+  git rebase master
+  ````
+
+  after performing these commands, it is not happy with me (as expected):
+
+  ````
+  λ git rebase master
+First, rewinding head to replay your work on top of it...
+Applying: first-change branch
+Using index info to reconstruct a base tree...
+M       README.md
+Falling back to patching base and 3-way merge...
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+error: Failed to merge in the changes.
+hint: Use 'git am --show-current-patch' to see the failed patch
+Patch failed at 0001 first-change branch
+Resolve all conflicts manually, mark them as resolved with
+"git add/rm <conflicted_files>", then run "git rebase --continue".
+You can instead skip this commit: run "git rebase --skip".
+To abort and get back to the state before "git rebase", run "git rebase --abort".
+````
+
+The reason is, it knows that the changes applied with the second change, conflict with the changes applied to master via first-change.  (which we planned)
+
+We now need to open up the file, and remediate the problem:
+````
+<<<<<<< HEAD
+  -- Working on the use case now -- SECOND CHANGE
+=======
+This is the first change here
+>>>>>>> first-change branch
+````
+
+This shows that the HEAD of master shows the line as working on the use case now --SECOND CHANGE which we added during our second change branch and PR/MERGE
+And it shows the conflicting line "this is the first change here" made via the first-change branch we are trying to add. 
+
+So I opened up the file and fix the line to this:
+
+-- Working on the use case now -- SECOND CHANGE and FIRST CHANGE
+
+then I did a the following:
+````
+git add README.md
+git rebase --continue
+git commit --amend
+git push origin first-change -f
+<Merged PR request from Web Page>
+git checkout master
+git pull upstream master
+```
+
+I added the fixed README.md to the current commit set
+I told rebase to finish based on my new file
+I amended my current PR with --amend
+I pushed the fixed file with the second-change commits to first-change branch and forced it
+I merged the PULL request 
+and I went back to master
+and I updated from the upsteram master branch
+
+````
+
+````
+λ git log
+
+commit 16b69043b2f70cde295d71f2e015e0df2d3f5aa0 (HEAD -> master, upstream/master)                     
+Merge: 9b41774 33452f7                                                                                
+Author: malevinso <malevinso@gmail.com>                                                               
+Date:   Fri Jun 7 14:58:30 2019 -0600                                                                 
+                                                                                                      
+    Merge pull request #2 from marks-demo-org/first-change                                            
+                                                                                                      
+    First change                                                                                      
+                                                                                                      
+commit 33452f7e5b312f32d784652354ec842fb46f4cce (origin/first-change)                                 
+Author: Mark Levinson <malevinso@gmail.com>                                                           
+Date:   Fri Jun 7 11:52:04 2019 -0600                                                                 
+                                                                                                      
+    first-change branch                                                                               
+                                                                                                      
+commit 9b417748098e715ce8d3624fd2eb69f19284c209                                                       
+Merge: a46dc0b 8b33b29                                                                                
+Author: malevinso <malevinso@gmail.com>                                                               
+Date:   Fri Jun 7 14:50:38 2019 -0600                                                                 
+                                                                                                      
+    Merge pull request #3 from marks-demo-org/second-change                                           
+                                                                                                      
+    Second change                                                                                     
+                                                                                                      
+commit 8b33b292a4fb63724d99a4db1458247aafd049bc (origin/second-change)                                
+Author: Mark Levinson <malevinso@gmail.com>                                                           
+Date:   Fri Jun 7 11:58:02 2019 -0600                                                                 
+                                                                                                      
+    second-change branch                                                                              
+                                                                                                      
+commit 0cd53193d1d64aebe24d09b639fb7ec0b4e25f6f                                                       
+Author: Mark Levinson <malevinso@gmail.com>                                                           
+Date:   Fri Jun 7 11:48:59 2019 -0600                                                                 
+                                                                                                      
+    first change to README.md                                                                         
+                                                                                                      
+commit a46dc0b23bb2f3ecd4036e432ea01004a12991d8 (origin/master, origin/HEAD)                          
+Merge: 5d147c4 7063407                                                                                
+Author: malevinso <malevinso@gmail.com>                                                               
+Date:   Fri Jun 7 11:05:10 2019 -0600                                                                 
+                                                                                                      
+    Merge pull request #1 from marks-demo-org/working-branch                                          
+                                                                                                      
+    Commit README                                                                                     
+                                                                                                      
+commit 70634070c6af2ffb08c6c48f12d3825e4a273f68                                                       
+Author: Mark Levinson <malevinso@gmail.com>                                                           
+Date:   Wed Jun 5 15:28:58 2019 -0600                                                                 
+                                                                                                      
+    Commit README                                                                                     
+                                                                                                      
+commit 5d147c471dc7ba128576caa8bdd6ea5e718a4c17                                                       
+Author: malevinso <malevinso@gmail.com>                                                               
+Date:   Wed Jun 5 14:37:33 2019 -0600                                                  ````
 
