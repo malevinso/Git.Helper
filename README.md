@@ -9,6 +9,10 @@ The typical workflow is:
 * Make changes to the Fork
 * Create Pull request to merge changes back to main
 
+More details here:
+![dev-workflow](images/dev-workflow.png)
+
+
 For this exmample, I will use 2 GitHub Oranizations:
 
 1. mark-demo-org
@@ -18,15 +22,16 @@ I will use malevinso as the "Master" org where the final code  repo will be main
 
 ### Connect Github to local 
 
-1. Fork Repo you want to work on 
+1. Create a new Repo in GitHub (from UI) - Initialize with README
+2. Fork Repo you want to work on 
     * Go to Repo you want to fork (malevinso/Git.Helper)
     * Select the Fork Icon in the upper right
     * Select the organization you want to put the fork (marks-demo-org)
-2. Clone the fork to your local Repo
+3. Clone the fork to your local Repo
     * ````git clone https://github.com/mark-demo-org/Git.Helper.git```` 
     e.g., for this repo
-3. Add the upstream repo:
-    * ````git remote add upstream https://github.com/malevinso/Git.Helper.git````
+    * Add the upstream repo:
+      ````git remote add upstream https://github.com/malevinso/Git.Helper.git````
     * Run this command: 
         ````git remote -v```` you sould see:
         ````yaml
@@ -36,15 +41,9 @@ I will use malevinso as the "Master" org where the final code  repo will be main
         upstream https://github.com/malevinso/Git.Helper.git (push)
         ````
 
-### Start making some changes
 
-1. We have a file called "README.md" from the orignal repo. Before we make any changes we can run git status to show nothing has changed:
-    ````
-    λ git status
-    On branch master
-    nothing to commit, working tree clean
-    ````
-2. First thing we should do is create a new branch (this makes it much easier to merge the original repo back into local master branch)
+4. Create a new branch. 
+    
     ````
     λ git checkout -b working-branch
     Switched to a new branch 'working-branch'
@@ -52,7 +51,7 @@ I will use malevinso as the "Master" org where the final code  repo will be main
     We are now working on a new branch in this case called 'working-branch'
 
 
-3. Now I will make some changes to the file and you can see:
+5. Now I will make some changes to the file and you can see:
     ````
     λ git status
     On branch working-branch
@@ -68,7 +67,7 @@ I will use malevinso as the "Master" org where the final code  repo will be main
     Notice we have 1 modiied file.
 
 ### Push changes back to Fork
-1. First we can add the files to prepare a commit
+6. First we can add the files to prepare a commit
     ````
     λ git add -A
 
@@ -80,7 +79,7 @@ I will use malevinso as the "Master" org where the final code  repo will be main
         modified:   README.md
 
     ````
-2. Now you can create a commit
+    1. Now you can create a commit
     ````
     λ git commit -m "Commit README"
     [working-branch e5597a2] Commit README
@@ -89,7 +88,8 @@ I will use malevinso as the "Master" org where the final code  repo will be main
     ````
     >Notice the working branch and the SHA(unique id of the commit)
 
-3. Finally we can push them back to the Forked Repo (Keeping the working-branch)
+
+    2. Finally we can push them back to the Forked Repo (Keeping the working-branch)
     ````
     λ git push origin working-branch
     Enumerating objects: 8, done.
@@ -110,10 +110,12 @@ I will use malevinso as the "Master" org where the final code  repo will be main
 
 ### Create a Pull Request to Request Update to Main Repo
 
+7. Create PR to update the Main Repo
+
 Very simple, just go to the upstream rep that you want to merge into and click New Pull Request
 
-1. make sure you have the correct branch    malevinso/GitHelper (Master) <- marks-demo-org/GitHelper(working-branch)
-2. Merge the PR
+    1. make sure you have the correct branch    malevinso/GitHelper (Master) <- marks-demo-org/GitHelper(working-branch)
+    2. Merge the PR
 
 now we have on the master branch: 
 ````
@@ -140,23 +142,23 @@ Date:   Wed Jun 5 14:37:33 2019 -0600
 ````
 
 
-### Delete the working-branch
+8. Update your local repo (from master)
 
-git branch -d working-branch
-git push origin --delete working-branch
+````
+git pull upstream master
+````
 
+9. Update your fork:
 
-### Update the Local Repo
+````
+git push orgin master -f
+````
 
-from the master branch 
-git pull upstream
+10. Delete Working Branch
+````
+git branch -D working-branch
+````
 
-
-### Update the Fork
-
-from the master branch
-
-git push upstream  
 
 ## What if the PR fails? 
 E.g., Can't Merge Automatically
@@ -193,7 +195,7 @@ E.g., Can't Merge Automatically
   after performing these commands, it is not happy with me (as expected):
 
   ````
-  λ git rebase master
+λ git rebase master
 First, rewinding head to replay your work on top of it...
 Applying: first-change branch
 Using index info to reconstruct a base tree...
@@ -213,6 +215,7 @@ To abort and get back to the state before "git rebase", run "git rebase --abort"
 The reason is, it knows that the changes applied with the second change, conflict with the changes applied to master via first-change.  (which we planned)
 
 We now need to open up the file, and remediate the problem:
+
 ````
 <<<<<<< HEAD
   -- Working on the use case now -- SECOND CHANGE
