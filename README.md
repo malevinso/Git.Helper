@@ -9,7 +9,7 @@ The typical workflow is:
 * Make changes to the Fork
 * Create Pull request to merge changes back to main
 
-More details here:
+### More details here:
 ![dev-workflow](images/dev-workflow.png)
 
 
